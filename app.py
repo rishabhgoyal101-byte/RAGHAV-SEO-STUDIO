@@ -10,100 +10,95 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🏢 RAGHAV REALTY AI SEO Generator")
-st.markdown("Generate SEO titles, meta descriptions, keywords & hashtags instantly.")
+# ----------------------------
+# CUSTOM PREMIUM STYLING
+# ----------------------------
+st.markdown("""
+<style>
+    .stApp {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: white;
+    }
+    .main-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #d4af37;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    .subtitle {
+        text-align: center;
+        color: #cbd5e1;
+        margin-bottom: 2rem;
+    }
+    .stButton > button {
+        background-color: #d4af37;
+        color: black;
+        border-radius: 12px;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        width: 100%;
+    }
+    .stTextInput input, .stTextArea textarea {
+        border-radius: 10px;
+    }
+    .block-container {
+        padding-top: 2rem;
+        max-width: 1000px;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# ----------------------------
+# HEADER
+# ----------------------------
+st.markdown('<div class="main-title">RAGHAV REALTY</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">AI-Powered SEO & Hashtag Generator for New Project Launches</div>', unsafe_allow_html=True)
 
 # ----------------------------
 # API CONFIG
 # ----------------------------
 client = OpenAI(
-    api_key=st.secrets["XAI_API_KEY"],
+    api_key=st.secrets["GROK_API_KEY"],
     base_url="https://api.x.ai/v1"
 )
 
 # ----------------------------
-# FORM INPUTS
+# FORM
 # ----------------------------
 with st.form("seo_form"):
+    col1, col2 = st.columns(2)
 
-    project_name = st.text_input("Project Name")
+    with col1:
+        project_name = st.text_input("Project Name")
+        city = st.selectbox("City", ["Mumbai", "Pune", "Delhi", "Bangalore", "Jaipur", "Ahmedabad"])
+        micro_market = st.text_input("Micro Market")
+        project_type = st.selectbox("Project Type", ["Residential", "Commercial", "Mixed"])
 
-    city = st.selectbox(
-        "City",
-        [
-            "Mumbai",
-            "Pune",
-            "Delhi",
-            "Bangalore",
-            "Jaipur",
-            "Ahmedabad"
-        ]
-    )
+    with col2:
+        configuration = st.multiselect("Configuration", ["1 BHK", "2 BHK", "3 BHK", "4 BHK", "Office", "Retail"])
+        landmarks = st.text_input("Nearby Landmarks")
+        brand_positioning = st.selectbox("Brand Positioning", ["Luxury", "Premium", "Affordable", "Ultra Luxury"])
 
-    micro_market = st.text_input(
-        "Micro Market (e.g. Andheri East)"
-    )
+    usp = st.text_area("USP (Unique Selling Proposition)")
 
-    project_type = st.selectbox(
-        "Project Type",
-        [
-            "Residential",
-            "Commercial",
-            "Mixed"
-        ]
-    )
-
-    configuration = st.multiselect(
-        "Configuration",
-        [
-            "1 BHK",
-            "2 BHK",
-            "3 BHK",
-            "4 BHK",
-            "Office",
-            "Retail"
-        ]
-    )
-
-    landmarks = st.text_input(
-        "Nearby Landmarks (optional)"
-    )
-
-    brand_positioning = st.selectbox(
-        "Brand Positioning",
-        [
-            "Luxury",
-            "Premium",
-            "Affordable",
-            "Ultra Luxury"
-        ]
-    )
-
-    usp = st.text_area(
-        "USP (Unique Selling Proposition)"
-    )
-
-    submit = st.form_submit_button(
-        "Generate SEO Content"
-    )
+    submit = st.form_submit_button("Generate Premium SEO Content")
 
 # ----------------------------
 # GENERATE OUTPUT
 # ----------------------------
 if submit:
-
     prompt = f"""
-    You are an expert real estate SEO strategist.
+    You are an expert luxury real estate SEO strategist for India.
 
     Generate:
-
     1. 5 SEO Titles
     2. 3 Meta Descriptions
     3. 10 SEO Keywords
-    4. 10 Social Media Hashtags
+    4. 10 Premium Social Media Hashtags
 
     Project Details:
-
     Project Name: {project_name}
     City: {city}
     Micro Market: {micro_market}
@@ -113,25 +108,19 @@ if submit:
     Brand Positioning: {brand_positioning}
     USP: {usp}
 
-    Make content optimized for:
-    - Google SEO
-    - Instagram discoverability
-    - LinkedIn engagement
+    Use premium, luxury-focused language optimized for Google SEO and social media.
     """
 
-    with st.spinner("Generating AI SEO content..."):
-
+    with st.spinner("Generating premium SEO content..."):
         response = client.chat.completions.create(
             model="grok-3",
             messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
+                {"role": "user", "content": prompt}
             ]
         )
 
         result = response.choices[0].message.content
 
-    st.success("Generated successfully!")
+    st.success("SEO content generated successfully!")
     st.markdown(result)
+
