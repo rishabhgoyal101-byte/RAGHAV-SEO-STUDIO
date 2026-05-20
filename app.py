@@ -17,7 +17,7 @@ st.markdown("Generate SEO titles, meta descriptions, keywords & hashtags instant
 # API CONFIG
 # ----------------------------
 client = OpenAI(
-    api_key=st.secrets["GROK_API_KEY"],
+    api_key=st.secrets["XAI_API_KEY"],
     base_url="https://api.x.ai/v1"
 )
 
