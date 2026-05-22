@@ -60,8 +60,7 @@ st.markdown('<div class="subtitle">AI-Powered SEO & Hashtag Generator for New Pr
 # API CONFIG
 # ----------------------------
 client = Groq(
-    api_key=st.secrets["GROQ_API_KEY"],
-    base_url="https://api.groq.com/openai/v1"
+    api_key=st.secrets["GROQ_API_KEY"]
 )
 
 # ----------------------------
