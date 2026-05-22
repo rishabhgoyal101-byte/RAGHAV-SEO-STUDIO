@@ -1,5 +1,7 @@
 import streamlit as st
 from groq import Groq
+from pptx import Presentation
+from io import BytesIO
 
 # ----------------------------
 # PAGE CONFIG
@@ -40,28 +42,21 @@ st.markdown("""
         font-weight: 600;
         width: 100%;
     }
-    .stTextInput input, .stTextArea textarea {
-        border-radius: 10px;
-    }
-    .block-container {
-        padding-top: 2rem;
-        max-width: 1000px;
-    }
 </style>
 """, unsafe_allow_html=True)
 
 # ----------------------------
-# HEADER
+# HEADER + LOGO
 # ----------------------------
+# Upload your logo file as logo.png in the same folder
+st.image("logo.png", width=180)
 st.markdown('<div class="main-title">RAGHAV REALTY</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">AI-Powered SEO & Hashtag Generator for New Project Launches</div>', unsafe_allow_html=True)
 
 # ----------------------------
 # API CONFIG
 # ----------------------------
-client = Groq(
-    api_key=st.secrets["GROQ_API_KEY"]
-)
+client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 
 # ----------------------------
 # FORM
@@ -81,8 +76,24 @@ with st.form("seo_form"):
         brand_positioning = st.selectbox("Brand Positioning", ["Luxury", "Premium", "Affordable", "Ultra Luxury"])
 
     usp = st.text_area("USP (Unique Selling Proposition)")
-
     submit = st.form_submit_button("Generate Premium SEO Content")
+
+
+def create_ppt(seo_text, hashtag_text):
+    prs = Presentation()
+
+    slide1 = prs.slides.add_slide(prs.slide_layouts[5])
+    slide1.shapes.title.text = "SEO Content"
+    slide1.placeholders[0].text = seo_text
+
+    slide2 = prs.slides.add_slide(prs.slide_layouts[5])
+    slide2.shapes.title.text = "Hashtags"
+    slide2.placeholders[0].text = hashtag_text
+
+    output = BytesIO()
+    prs.save(output)
+    output.seek(0)
+    return output
 
 # ----------------------------
 # GENERATE OUTPUT
@@ -91,11 +102,14 @@ if submit:
     prompt = f"""
     You are an expert luxury real estate SEO strategist for India.
 
-    Generate:
-    1. 5 SEO Titles
-    2. 3 Meta Descriptions
-    3. 10 SEO Keywords
-    4. 10 Premium Social Media Hashtags
+    Generate in two clearly labeled sections:
+    SECTION 1: SEO
+    - 5 SEO Titles
+    - 3 Meta Descriptions
+    - 10 SEO Keywords
+
+    SECTION 2: HASHTAGS
+    - 10 Premium Social Media Hashtags
 
     Project Details:
     Project Name: {project_name}
@@ -106,19 +120,39 @@ if submit:
     Nearby Landmarks: {landmarks}
     Brand Positioning: {brand_positioning}
     USP: {usp}
-
-    Use premium, luxury-focused language optimized for Google SEO and social media.
     """
 
     with st.spinner("Generating premium SEO content..."):
-        response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
-        )
+        try:
+            response = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.7,
+                max_tokens=1000
+            )
 
-        result = response.choices[0].message.content
+            result = response.choices[0].message.content
 
-    st.success("SEO content generated successfully!")
-    st.markdown(result)
+            # Basic split between SEO and hashtags
+            parts = result.split("SECTION 2:") if "SECTION 2:" in result else [result, ""]
+            seo_content = parts[0]
+            hashtag_content = parts[1]
+
+            tab1, tab2 = st.tabs(["SEO", "Hashtags"])
+            with tab1:
+                st.markdown(seo_content)
+            with tab2:
+                st.markdown(hashtag_content)
+
+            ppt_file = create_ppt(seo_content, hashtag_content)
+            st.download_button(
+                label="Download as PPT",
+                data=ppt_file,
+                file_name=f"{project_name}_seo_hashtags.pptx",
+                mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            )
+
+        except Exception as e:
+            st.error("Groq API Error:")
+            st.code(str(e))
+
