@@ -17,30 +17,133 @@ st.set_page_config(
 # ----------------------------
 st.markdown("""
 <style>
-    .stApp {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-        color: white;
+    /* RAGHAV REALTY website-inspired palette:
+       warm ivory, soft beige, deep brown, premium gold */
+
+    html, body, [data-testid="stAppViewContainer"], .stApp {
+        background: #f7f1e6 !important;
+        background-image:
+            radial-gradient(circle at top left, rgba(190, 143, 66, 0.18), transparent 30%),
+            linear-gradient(180deg, #fff8ec 0%, #f4ead8 50%, #eadcc5 100%) !important;
+        color: #2b2118 !important;
+        font-family: "Georgia", "Times New Roman", serif !important;
     }
+
+    [data-testid="stHeader"] {
+        background: transparent !important;
+    }
+
+    [data-testid="stToolbar"] {
+        right: 2rem !important;
+    }
+
+    [data-testid="stMainBlockContainer"], .block-container {
+        background: rgba(255, 252, 245, 0.78) !important;
+        border: 1px solid rgba(180, 132, 57, 0.24) !important;
+        border-radius: 28px !important;
+        padding: 2.2rem 2.4rem !important;
+        max-width: 1120px !important;
+        box-shadow: 0 24px 70px rgba(80, 55, 25, 0.12) !important;
+    }
+
     .main-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #d4af37;
-        text-align: center;
-        margin-bottom: 0.5rem;
+        font-size: 2.9rem !important;
+        font-weight: 800 !important;
+        color: #8b5e2a !important;
+        text-align: center !important;
+        letter-spacing: 4px !important;
+        text-transform: uppercase !important;
+        margin-bottom: 0.25rem !important;
     }
+
     .subtitle {
-        text-align: center;
-        color: #cbd5e1;
-        margin-bottom: 2rem;
+        text-align: center !important;
+        color: #6d5133 !important;
+        margin-bottom: 2rem !important;
+        letter-spacing: 1px !important;
+        font-size: 1.08rem !important;
+        font-family: "Arial", sans-serif !important;
     }
-    .stButton > button {
-        background-color: #d4af37;
-        color: black;
-        border-radius: 12px;
-        border: none;
-        padding: 0.75rem 1.5rem;
-        font-weight: 600;
-        width: 100%;
+
+    h1, h2, h3, h4, h5, h6, p, span, div, label, .stMarkdown {
+        color: #2b2118 !important;
+    }
+
+    label {
+        font-family: "Arial", sans-serif !important;
+        font-weight: 700 !important;
+        color: #5b4228 !important;
+    }
+
+    .stTextInput input, .stTextArea textarea {
+        background-color: #fffaf2 !important;
+        color: #2b2118 !important;
+        border: 1px solid rgba(139, 94, 42, 0.42) !important;
+        border-radius: 14px !important;
+        font-family: "Arial", sans-serif !important;
+    }
+
+    .stTextInput input:focus, .stTextArea textarea:focus {
+        border: 1px solid #b88945 !important;
+        box-shadow: 0 0 0 2px rgba(184, 137, 69, 0.18) !important;
+    }
+
+    [data-baseweb="select"] > div {
+        background-color: #fffaf2 !important;
+        color: #2b2118 !important;
+        border: 1px solid rgba(139, 94, 42, 0.42) !important;
+        border-radius: 14px !important;
+        font-family: "Arial", sans-serif !important;
+    }
+
+    [data-baseweb="select"] * {
+        color: #2b2118 !important;
+    }
+
+    .stButton > button, .stDownloadButton > button {
+        background: linear-gradient(135deg, #8b5e2a 0%, #c79b52 100%) !important;
+        color: #fff8ec !important;
+        border-radius: 999px !important;
+        border: none !important;
+        padding: 0.9rem 1.6rem !important;
+        font-weight: 800 !important;
+        width: 100% !important;
+        font-family: "Arial", sans-serif !important;
+        letter-spacing: 0.5px !important;
+        box-shadow: 0 12px 30px rgba(139, 94, 42, 0.24) !important;
+    }
+
+    .stButton > button:hover, .stDownloadButton > button:hover {
+        background: linear-gradient(135deg, #6f461d 0%, #b88945 100%) !important;
+        color: #ffffff !important;
+        transform: translateY(-1px);
+    }
+
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 12px !important;
+        border-bottom: 1px solid rgba(139, 94, 42, 0.25) !important;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        background-color: #fff6e8 !important;
+        color: #8b5e2a !important;
+        border-radius: 999px !important;
+        border: 1px solid rgba(139, 94, 42, 0.28) !important;
+        padding: 12px 26px !important;
+        font-weight: 800 !important;
+        font-family: "Arial", sans-serif !important;
+    }
+
+    .stTabs [aria-selected="true"] {
+        background: #8b5e2a !important;
+        color: #fff8ec !important;
+    }
+
+    [data-testid="stAlert"] {
+        background-color: rgba(255, 248, 236, 0.92) !important;
+        border: 1px solid rgba(139, 94, 42, 0.35) !important;
+        color: #2b2118 !important;
+        border-radius: 16px !important;
     }
 </style>
 """, unsafe_allow_html=True)
