@@ -1,5 +1,5 @@
 import streamlit as st
-from openai import OpenAI
+from groq import Groq
 
 # ----------------------------
 # PAGE CONFIG
@@ -59,9 +59,9 @@ st.markdown('<div class="subtitle">AI-Powered SEO & Hashtag Generator for New Pr
 # ----------------------------
 # API CONFIG
 # ----------------------------
-client = OpenAI(
-    api_key=st.secrets["GROK_API_KEY"],
-    base_url="https://api.x.ai/v1"
+client = Groq(
+    api_key=st.secrets["GROQ_API_KEY"],
+    base_url="https://api.groq.com/openai/v1"
 )
 
 # ----------------------------
@@ -113,7 +113,7 @@ if submit:
 
     with st.spinner("Generating premium SEO content..."):
         response = client.chat.completions.create(
-            model="grok-3",
+            model="llama-3.3-70b-versatile",
             messages=[
                 {"role": "user", "content": prompt}
             ]
@@ -123,4 +123,3 @@ if submit:
 
     st.success("SEO content generated successfully!")
     st.markdown(result)
-
